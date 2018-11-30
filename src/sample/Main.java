@@ -48,7 +48,7 @@ public class Main extends Application {
 
         Image image = SwingFXUtils.toFXImage(bImage, null);
 
-        System.out.println("Okay");
+//        System.out.println("Okay");
 
         return image;
     }
@@ -58,16 +58,17 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("ImageView Experiment 1");
 
-//        String imageName = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne0005.rgb";
+        String imageName = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne0005.rgb";
 ////        String imageName = "C:\\Users\\abhin\\Desktop\\Memes\\jeremycarwet.PNG";
 //
-//        Image image = getImage(imageName);
-//
-//        ImageView imageView = new ImageView(image);
-//
-//        HBox hbox = new HBox(imageView);
+        Image image = getImage(imageName);
 
-        Scene scene = new Scene(root, 500, 500);
+        ImageView imageView = new ImageView(image);
+
+        HBox hbox = new HBox(imageView);
+
+        Scene scene = new Scene(root);
+//        Scene scene = new Scene(hbox);
         primaryStage.setScene(scene);
         primaryStage.show();
 
