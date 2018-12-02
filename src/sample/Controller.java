@@ -2,14 +2,15 @@ package sample;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -41,6 +42,24 @@ public class Controller implements Initializable {
     private Button playpauseButton1;
     @FXML
     private Button playPauseButton2;
+    @FXML
+    private Button startLinkButton;
+    @FXML
+    private Button endLinkButton;
+    @FXML
+    private TextField startFrame;
+    @FXML
+    private TextField endFrame;
+    @FXML
+    private ListView linkList;
+    @FXML
+    private TextField linkName;
+    @FXML
+    private Button linkButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private TextField linkStartFrame;
 
     private Main main;
     private Image[] image;
@@ -49,6 +68,8 @@ public class Controller implements Initializable {
     public int[] currentFrame;
     public String videoOne;
     public String videoTwo;
+    private ObservableList<String> items;
+    public String boxCoordinates;
 
     private String prefix = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\";
 
@@ -60,8 +81,12 @@ public class Controller implements Initializable {
         timeline = new Timeline[2];
         isPlaying[0] = false;
         isPlaying[1] = false;
-        videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
-        videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo";
+        //videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
+        //videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo";
+
+        items = FXCollections.observableArrayList();
+        linkList.setItems(items);
+
 
         seek1.valueProperty().addListener((observable, oldValue, newValue) -> {
 //            double position = Math.floor((double) newValue) * 33.33;
@@ -87,10 +112,9 @@ public class Controller implements Initializable {
             new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent t) {
-//                        if (t.getClickCount() >1) {
-//                            reset(canvas, Color.BLUE);
-//                        }
+                    timeline[0].pause();
                     System.out.println(t.getX() + ", " + t.getY() + ", " + currentFrame[0]);
+                    boxCoordinates = t.getX() + ":" + t.getY();
 
                     GraphicsContext gc = canvas1.getGraphicsContext2D();
                     gc.clearRect(0, 0, canvas1.getWidth(), canvas1.getHeight());
@@ -102,7 +126,7 @@ public class Controller implements Initializable {
 
 
 
-        try {
+        /*try {
             videoLoop(videoOne, 0, 1);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -115,7 +139,7 @@ public class Controller implements Initializable {
         }
 
         timeline[0].play();
-        timeline[1].play();
+        timeline[1].play();*/
     }
 
     public void videoLoop(String videoPrefix, int videoNumber, int startFrame) throws InterruptedException {
@@ -176,7 +200,8 @@ public class Controller implements Initializable {
 
     @FXML
     public void getSourceVideo() throws InterruptedException {
-        timeline[0].stop();
+        if (timeline != null && timeline[0] != null)
+            timeline[0].stop();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RGB Files", "*.rgb"));
@@ -191,7 +216,8 @@ public class Controller implements Initializable {
 
     @FXML
     public void getTargetVideo() throws InterruptedException {
-        timeline[1].stop();
+        if (timeline != null && timeline[1] != null)
+            timeline[1].stop();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RGB Files", "*.rgb"));
@@ -202,5 +228,38 @@ public class Controller implements Initializable {
         videoLoop(fileprefix, 1, 1);
 
         timeline[1].play();
+    }
+
+    @FXML
+    public void startLinkProcess() {
+        startFrame.setText(String.valueOf(currentFrame[0]));
+        timeline[0].play();
+    }
+
+    @FXML
+    public void endLinkProcess() {
+        timeline[0].pause();
+        endFrame.setText(String.valueOf(currentFrame[0]));
+    }
+
+    @FXML
+    public void setLink() {
+        linkStartFrame.setText(String.valueOf(currentFrame[1]));
+    }
+
+    @FXML
+    public void makeLink() {
+        String linkEntry = linkName.getText() + ":" + startFrame.getText() + ":" + endFrame.getText() + ":" + linkStartFrame.getText() + ":" + boxCoordinates + videoTwo;
+        items.add(linkEntry);
+    }
+
+    @FXML
+    public void deleteLink() {
+        int selectedIdx = linkList.getSelectionModel().getSelectedIndex();
+        System.out.println(selectedIdx);
+        if (selectedIdx >= 0) {
+            linkList.getItems().remove(selectedIdx);
+        }
+
     }
 }
