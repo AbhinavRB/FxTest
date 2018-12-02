@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -45,6 +47,8 @@ public class Controller implements Initializable {
     private boolean[] isPlaying;
     private Timeline[] timeline;
     public int[] currentFrame;
+    public String videoOne;
+    public String videoTwo;
 
     private String prefix = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\";
 
@@ -56,8 +60,8 @@ public class Controller implements Initializable {
         timeline = new Timeline[2];
         isPlaying[0] = false;
         isPlaying[1] = false;
-        String videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
-        String videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo";
+        videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
+        videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo";
 
         seek1.valueProperty().addListener((observable, oldValue, newValue) -> {
 //            double position = Math.floor((double) newValue) * 33.33;
@@ -80,30 +84,32 @@ public class Controller implements Initializable {
         });
 
         canvas1.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent t) {
+            new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent t) {
 //                        if (t.getClickCount() >1) {
 //                            reset(canvas, Color.BLUE);
 //                        }
-                        System.out.println(t.getX() + ", " + t.getY() + ", " + currentFrame[0]);
+                    System.out.println(t.getX() + ", " + t.getY() + ", " + currentFrame[0]);
 
-                        GraphicsContext gc = canvas1.getGraphicsContext2D();
-                        gc.clearRect(0, 0, canvas1.getWidth(), canvas1.getHeight());
-                        gc.setGlobalAlpha(0.5);
-                        gc.setFill(Color.valueOf("#c0c0c0"));
-                        gc.fillRect(t.getX() - 40, t.getY() - 40, 80, 80);
-                    }
-                });
+                    GraphicsContext gc = canvas1.getGraphicsContext2D();
+                    gc.clearRect(0, 0, canvas1.getWidth(), canvas1.getHeight());
+                    gc.setGlobalAlpha(0.5);
+                    gc.setFill(Color.valueOf("#c0c0c0"));
+                    gc.fillRect(t.getX() - 40, t.getY() - 40, 80, 80);
+                }
+            });
+
+
 
         try {
-            videoLoop(videoOne, 0);
+            videoLoop(videoOne, 0, 1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         try {
-            videoLoop(videoTwo, 1);
+            videoLoop(videoTwo, 1, 1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -112,8 +118,8 @@ public class Controller implements Initializable {
         timeline[1].play();
     }
 
-    public void videoLoop(String videoPrefix, int videoNumber) throws InterruptedException {
-        currentFrame[videoNumber] = 1;
+    public void videoLoop(String videoPrefix, int videoNumber, int startFrame) throws InterruptedException {
+        currentFrame[videoNumber] = startFrame;
 
         timeline[videoNumber] = new Timeline(new KeyFrame(Duration.millis(33.33333), new EventHandler<ActionEvent>() {
 
@@ -166,5 +172,35 @@ public class Controller implements Initializable {
             isPlaying[1] = true;
             playPauseButton2.setText("\u23f8");
         }
+    }
+
+    @FXML
+    public void getSourceVideo() throws InterruptedException {
+        timeline[0].stop();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open File");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RGB Files", "*.rgb"));
+
+        File file = chooser.showOpenDialog(new Stage());
+        videoOne = file.getAbsolutePath();
+        String fileprefix = videoOne.substring(0, videoOne.length() - 8);
+        videoLoop(fileprefix, 0, 1);
+
+        timeline[0].play();
+    }
+
+    @FXML
+    public void getTargetVideo() throws InterruptedException {
+        timeline[1].stop();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open File");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RGB Files", "*.rgb"));
+
+        File file = chooser.showOpenDialog(new Stage());
+        videoTwo = file.getAbsolutePath();
+        String fileprefix = videoTwo.substring(0, videoTwo.length() - 8);
+        videoLoop(fileprefix, 1, 1);
+
+        timeline[1].play();
     }
 }
