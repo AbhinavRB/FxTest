@@ -60,6 +60,10 @@ public class Controller implements Initializable {
     private Button deleteButton;
     @FXML
     private TextField linkStartFrame;
+    @FXML
+    private Slider boxWidth;
+    @FXML
+    private Slider boxHeight;
 
     private Main main;
     private Image[] image;
@@ -70,6 +74,8 @@ public class Controller implements Initializable {
     public String videoTwo;
     private ObservableList<String> items;
     public String boxCoordinates;
+    private int widthOffset = 40;
+    private int heightOffset = 40;
 
     private String prefix = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\";
 
@@ -120,26 +126,32 @@ public class Controller implements Initializable {
                     gc.clearRect(0, 0, canvas1.getWidth(), canvas1.getHeight());
                     gc.setGlobalAlpha(0.5);
                     gc.setFill(Color.valueOf("#c0c0c0"));
-                    gc.fillRect(t.getX() - 40, t.getY() - 40, 80, 80);
+                    gc.fillRect(t.getX() - widthOffset, t.getY() - heightOffset, widthOffset*2, heightOffset*2);
                 }
             });
 
+        boxWidth.valueProperty().addListener((observable, oldValue, newValue) -> {
+            int curPosX = (int)Math.floor(Double.parseDouble(boxCoordinates.split(":")[0])), curPosY = (int)Math.floor(Double.parseDouble(boxCoordinates.split(":")[1]));
+            widthOffset = (int) Math.floor((Double) newValue);
 
+            GraphicsContext gc = canvas1.getGraphicsContext2D();
+            gc.clearRect(0, 0, canvas1.getWidth(), canvas1.getHeight());
+            gc.setGlobalAlpha(0.5);
+            gc.setFill(Color.valueOf("#c0c0c0"));
+            gc.fillRect(curPosX - widthOffset, curPosY - heightOffset, widthOffset*2, heightOffset*2);
+        });
 
-        /*try {
-            videoLoop(videoOne, 0, 1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        boxHeight.valueProperty().addListener((observable, oldValue, newValue) -> {
+            int curPosX = (int)Math.floor(Double.parseDouble(boxCoordinates.split(":")[0])), curPosY = (int)Math.floor(Double.parseDouble(boxCoordinates.split(":")[1]));
+            heightOffset = (int) Math.floor((Double) newValue);
 
-        try {
-            videoLoop(videoTwo, 1, 1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            GraphicsContext gc = canvas1.getGraphicsContext2D();
+            gc.clearRect(0, 0, canvas1.getWidth(), canvas1.getHeight());
+            gc.setGlobalAlpha(0.5);
+            gc.setFill(Color.valueOf("#c0c0c0"));
+            gc.fillRect(curPosX - widthOffset, curPosY - heightOffset, widthOffset*2, heightOffset*2);
+        });
 
-        timeline[0].play();
-        timeline[1].play();*/
     }
 
     public void videoLoop(String videoPrefix, int videoNumber, int startFrame) throws InterruptedException {
@@ -249,7 +261,13 @@ public class Controller implements Initializable {
 
     @FXML
     public void makeLink() {
-        String linkEntry = linkName.getText() + ":" + startFrame.getText() + ":" + endFrame.getText() + ":" + linkStartFrame.getText() + ":" + boxCoordinates + videoTwo;
+
+        /*
+        format: linkName : startFrame : endFrame : linkStartFrame : boxX : boxY : boxW : boxH : videoTwo
+         */
+
+        String boxOffsets = String.valueOf(widthOffset) + ":" + String.valueOf(heightOffset);
+        String linkEntry = linkName.getText() + ":" + startFrame.getText() + ":" + endFrame.getText() + ":" + linkStartFrame.getText() + ":" + boxCoordinates + boxOffsets + videoTwo;
         items.add(linkEntry);
     }
 
