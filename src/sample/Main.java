@@ -15,9 +15,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 
 public class Main extends Application {
+
+    public static Stage myStage;
+    public static Parent root;
+    public static Scene scene;
 
     public static Image getImage(String filename) {
         int width = 352, height = 288;
@@ -48,30 +53,32 @@ public class Main extends Application {
 
         Image image = SwingFXUtils.toFXImage(bImage, null);
 
-//        System.out.println("Okay");
-
         return image;
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("ImageView Experiment 1");
 
-        String imageName = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne0005.rgb";
-////        String imageName = "C:\\Users\\abhin\\Desktop\\Memes\\jeremycarwet.PNG";
-//
-        Image image = getImage(imageName);
+        myStage = primaryStage;
+//        primaryStage.setTitle("ImageView Experiment 1");
+        myStage.setTitle("Author HyperVideo");
 
-        ImageView imageView = new ImageView(image);
+        sceneStart("sample.fxml");
 
-        HBox hbox = new HBox(imageView);
+//        sceneStart("display.fxml");
 
-        Scene scene = new Scene(root);
-//        Scene scene = new Scene(hbox);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
 
+
+
+    }
+
+    public static void sceneStart(String sceneName) throws IOException {
+        root = FXMLLoader.load(Main.class.getResource(sceneName));
+        scene = new Scene(root);
+        myStage.setScene(scene);
+        myStage.show();
     }
 
 

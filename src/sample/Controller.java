@@ -22,6 +22,7 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +59,8 @@ public class Controller implements Initializable {
     private Button linkButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button submitButton;
     @FXML
     private TextField linkStartFrame;
     @FXML
@@ -278,6 +281,10 @@ public class Controller implements Initializable {
         if (selectedIdx >= 0) {
             linkList.getItems().remove(selectedIdx);
         }
+    }
 
+    @FXML
+    public void submitHyperVideo() throws IOException {
+        main.sceneStart("display.fxml");
     }
 }

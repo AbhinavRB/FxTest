@@ -45,5 +45,6 @@
       <Slider fx:id="boxHeight" blockIncrement="2.0" layoutX="500.0" layoutY="583.0" min="20.0" prefHeight="32.0" prefWidth="113.0" />
       <Label layoutX="460.0" layoutY="540.0" text="W:" />
       <Label layoutX="460.0" layoutY="588.0" text="H:" />
+      <Button fx:id="submitButton" layoutX="998.0" layoutY="618.0" mnemonicParsing="false" onAction="#submitHyperVideo" text="Submit!" />
     </children>
 </AnchorPane>
