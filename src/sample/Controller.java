@@ -101,28 +101,34 @@ public class Controller implements Initializable {
         seek1.valueProperty().addListener((observable, oldValue, newValue) -> {
 //            double position = Math.floor((double) newValue) * 33.33;
             timeline[0].pause();
+            isPlaying[0] = false;
             currentFrame[0] = (int) Math.floor((Double) newValue);
             if (currentFrame[0] > 8999) {
                 currentFrame[0] = 8999;
                 mediaPlayer[0].pause();
+                isPlaying[0] = false;
             }
 //            System.out.println(currentFrame);
             timeline[0].play();
             mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
             mediaPlayer[0].play();
+            isPlaying[0] = true;
         });
 
         seek2.valueProperty().addListener((observable, oldValue, newValue) -> {
 //            double position = Math.floor((double) newValue) * 33.33;
             timeline[1].pause();
+            isPlaying[1] = false;
             currentFrame[1] = (int) Math.floor((Double) newValue);
             if (currentFrame[1] > 8999) {
                 currentFrame[1] = 8999;
                 mediaPlayer[1].pause();
+                isPlaying[1] = false;
             }
             timeline[1].play();
             mediaPlayer[1].seek(Duration.millis(currentFrame[1]*33.33));
             mediaPlayer[1].play();
+            isPlaying[1] = true;
         });
 
         canvas1.addEventHandler(MouseEvent.MOUSE_CLICKED,
@@ -131,6 +137,7 @@ public class Controller implements Initializable {
                 public void handle(MouseEvent t) {
                     timeline[0].pause();
                     mediaPlayer[0].pause();
+                    isPlaying[0] = false;
                     System.out.println(t.getX() + ", " + t.getY() + ", " + currentFrame[0]);
                     boxCoordinates = (int) Math.floor(t.getX()) + ":" + (int) Math.floor(t.getY());
 
@@ -260,6 +267,7 @@ public class Controller implements Initializable {
             public void run() {
                 mediaPlayer[0].play();
                 timeline[0].play();
+                isPlaying[0] = true;
             }
         });
     }
@@ -285,6 +293,7 @@ public class Controller implements Initializable {
             public void run() {
                 mediaPlayer[1].play();
                 timeline[1].play();
+                isPlaying[1] = true;
             }
         });
     }
@@ -294,17 +303,22 @@ public class Controller implements Initializable {
         startFrame.setText(String.valueOf(currentFrame[0]));
         timeline[0].play();
         mediaPlayer[0].play();
+        isPlaying[0] = true;
     }
 
     @FXML
     public void endLinkProcess() {
         timeline[0].pause();
         mediaPlayer[0].pause();
+        isPlaying[0] = false;
         endFrame.setText(String.valueOf(currentFrame[0]));
     }
 
     @FXML
     public void setLink() {
+        timeline[1].pause();
+        mediaPlayer[1].pause();
+        isPlaying[1] = false;
         linkStartFrame.setText(String.valueOf(currentFrame[1]));
     }
 

@@ -102,12 +102,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="fxml" value="4" />
-          <entry key="java" value="8082" />
+          <entry key="java" value="8337" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="8082" />
+          <entry key="JAVA" value="8337" />
           <entry key="XML" value="4" />
         </counts>
       </usages-collector>
@@ -130,12 +130,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="650">
-              <caret line="125" column="11" lean-forward="true" selection-start-line="100" selection-start-column="8" selection-end-line="125" selection-end-column="11" />
-              <folding>
-                <element signature="e#10695#10696#0" expanded="true" />
-                <element signature="e#10766#10767#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="334">
+              <caret line="305" column="28" selection-start-line="305" selection-start-column="28" selection-end-line="305" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -143,8 +139,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/DisplayController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-16">
-              <caret line="96" column="31" lean-forward="true" selection-start-line="96" selection-start-column="31" selection-end-line="96" selection-end-column="31" />
+            <state relative-caret-position="260">
+              <caret line="89" column="29" selection-start-line="89" selection-start-column="23" selection-end-line="89" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -200,6 +196,8 @@
       <find>videoloop</find>
       <find>mediaplayer.pl</find>
       <find>mediaplayer</find>
+      <find>.play</find>
+      <find>.pause</find>
     </findStrings>
   </component>
   <component name="FindManager">
@@ -497,19 +495,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="650">
-          <caret line="125" column="11" lean-forward="true" selection-start-line="100" selection-start-column="8" selection-end-line="125" selection-end-column="11" />
-          <folding>
-            <element signature="e#10695#10696#0" expanded="true" />
-            <element signature="e#10766#10767#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="334">
+          <caret line="305" column="28" selection-start-line="305" selection-start-column="28" selection-end-line="305" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/DisplayController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-16">
-          <caret line="96" column="31" lean-forward="true" selection-start-line="96" selection-start-column="31" selection-end-line="96" selection-end-column="31" />
+        <state relative-caret-position="260">
+          <caret line="89" column="29" selection-start-line="89" selection-start-column="23" selection-end-line="89" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

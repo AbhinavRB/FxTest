@@ -92,11 +92,13 @@ public class DisplayController implements Initializable {
             if (currentFrame[0] > 8999) {
                 currentFrame[0] = 8999;
                 mediaPlayer[0].pause();
+                isPlaying[0] = false;
             }
 //            System.out.println(currentFrame);
             timeline[0].play();
             mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
             mediaPlayer[0].play();
+            isPlaying[0] = true;
         });
 
         displaySeek2.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -106,10 +108,12 @@ public class DisplayController implements Initializable {
             if (currentFrame[1] > 8999) {
                 currentFrame[1] = 8999;
                 mediaPlayer[1].pause();
+                isPlaying[1] = false;
             }
             timeline[1].play();
             mediaPlayer[1].seek(Duration.millis(currentFrame[1]*33.33));
             mediaPlayer[1].play();
+            isPlaying[1] = true;
         });
 
         displayCanvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
@@ -200,6 +204,7 @@ public class DisplayController implements Initializable {
             public void run() {
                 mediaPlayer[0].play();
                 timeline[0].play();
+                isPlaying[0] = true;
             }
         });
     }
@@ -210,6 +215,7 @@ public class DisplayController implements Initializable {
 
         timeline[0].pause();
         mediaPlayer[0].pause();
+        isPlaying[0] = false;
 
         videoLoop(source, 1, startFrame);
 
@@ -218,6 +224,7 @@ public class DisplayController implements Initializable {
             public void run() {
                 mediaPlayer[1].play();
                 timeline[1].play();
+                isPlaying[1] = true;
             }
         });
     }
