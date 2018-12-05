@@ -14,15 +14,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -68,6 +67,7 @@ public class Controller implements Initializable {
     @FXML
     private Slider boxHeight;
 
+    private MediaPlayer[] mediaPlayer;
     private Main main;
     private Image[] image;
     private boolean[] isPlaying;
@@ -88,6 +88,7 @@ public class Controller implements Initializable {
         currentFrame = new int[2];
         image = new Image[2];
         timeline = new Timeline[2];
+        mediaPlayer = new MediaPlayer[2];
         isPlaying[0] = false;
         isPlaying[1] = false;
         //videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
@@ -101,20 +102,27 @@ public class Controller implements Initializable {
 //            double position = Math.floor((double) newValue) * 33.33;
             timeline[0].pause();
             currentFrame[0] = (int) Math.floor((Double) newValue);
-            if (currentFrame[0] > 8999)
+            if (currentFrame[0] > 8999) {
                 currentFrame[0] = 8999;
+                mediaPlayer[0].pause();
+            }
 //            System.out.println(currentFrame);
             timeline[0].play();
+            mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
+            mediaPlayer[0].play();
         });
 
         seek2.valueProperty().addListener((observable, oldValue, newValue) -> {
 //            double position = Math.floor((double) newValue) * 33.33;
             timeline[1].pause();
             currentFrame[1] = (int) Math.floor((Double) newValue);
-            if (currentFrame[1] > 8999)
+            if (currentFrame[1] > 8999) {
                 currentFrame[1] = 8999;
-//            System.out.println(currentFrame);
+                mediaPlayer[1].pause();
+            }
             timeline[1].play();
+            mediaPlayer[1].seek(Duration.millis(currentFrame[1]*33.33));
+            mediaPlayer[1].play();
         });
 
         canvas1.addEventHandler(MouseEvent.MOUSE_CLICKED,
@@ -122,8 +130,9 @@ public class Controller implements Initializable {
                 @Override
                 public void handle(MouseEvent t) {
                     timeline[0].pause();
+                    mediaPlayer[0].pause();
                     System.out.println(t.getX() + ", " + t.getY() + ", " + currentFrame[0]);
-                    boxCoordinates = t.getX() + ":" + t.getY();
+                    boxCoordinates = (int) Math.floor(t.getX()) + ":" + (int) Math.floor(t.getY());
 
                     GraphicsContext gc = canvas1.getGraphicsContext2D();
                     gc.clearRect(0, 0, canvas1.getWidth(), canvas1.getHeight());
@@ -160,6 +169,18 @@ public class Controller implements Initializable {
     public void videoLoop(String videoPrefix, int videoNumber, int startFrame) throws InterruptedException {
         currentFrame[videoNumber] = startFrame;
 
+        String audioFile = videoPrefix + ".wav";
+        Media media = new Media(new File(audioFile).toURI().toString());
+        mediaPlayer[videoNumber] = new MediaPlayer(media);
+        mediaPlayer[videoNumber].setAutoPlay(true);
+//        mediaPlayer.setOnReady(new Runnable() {
+//            @Override
+//            public void run() {
+//                mediaPlayer.play();
+//            }
+//        });
+
+
         timeline[videoNumber] = new Timeline(new KeyFrame(Duration.millis(33.33333), new EventHandler<ActionEvent>() {
 
             private int i = 1;
@@ -169,7 +190,7 @@ public class Controller implements Initializable {
             public void handle(ActionEvent event) {
                 imageName = videoPrefix + String.format("%04d", currentFrame[videoNumber]) + ".rgb";
 //                System.out.println(imageName);
-                image[videoNumber] = main.getImage(imageName);
+                image[videoNumber] = Main.getImage(imageName);
                 if (videoNumber == 0)
                     view1.setImage(image[videoNumber]);
                 else
@@ -190,11 +211,14 @@ public class Controller implements Initializable {
         if (isPlaying[0]) {
             timeline[0].pause();
             isPlaying[0] = false;
+            mediaPlayer[0].pause();
             playpauseButton1.setText("\u25b6");
         }
         else {
             timeline[0].play();
             isPlaying[0] = true;
+            mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
+            mediaPlayer[0].play();
             playpauseButton1.setText("\u23f8");
         }
     }
@@ -203,11 +227,14 @@ public class Controller implements Initializable {
     public void playPauseToggle2() {
         if (isPlaying[1]) {
             timeline[1].pause();
+            mediaPlayer[1].pause();
             isPlaying[1] = false;
             playPauseButton2.setText("\u25b6");
         }
         else {
             timeline[1].play();
+            mediaPlayer[1].seek(Duration.millis(currentFrame[1]*33.33));
+            mediaPlayer[1].play();
             isPlaying[1] = true;
             playPauseButton2.setText("\u23f8");
         }
@@ -215,8 +242,10 @@ public class Controller implements Initializable {
 
     @FXML
     public void getSourceVideo() throws InterruptedException {
-        if (timeline != null && timeline[0] != null)
+        if (timeline != null && timeline[0] != null) {
             timeline[0].stop();
+            mediaPlayer[0].stop();
+        }
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RGB Files", "*.rgb"));
@@ -226,13 +255,22 @@ public class Controller implements Initializable {
         String fileprefix = videoOne.substring(0, videoOne.length() - 8);
         videoLoop(fileprefix, 0, 1);
 
-        timeline[0].play();
+        mediaPlayer[0].setOnReady(new Runnable() {
+            @Override
+            public void run() {
+                mediaPlayer[0].play();
+                timeline[0].play();
+            }
+        });
     }
 
     @FXML
     public void getTargetVideo() throws InterruptedException {
-        if (timeline != null && timeline[1] != null)
+        if (timeline != null && timeline[1] != null) {
             timeline[1].stop();
+            mediaPlayer[1].stop();
+        }
+
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RGB Files", "*.rgb"));
@@ -242,18 +280,26 @@ public class Controller implements Initializable {
         String fileprefix = videoTwo.substring(0, videoTwo.length() - 8);
         videoLoop(fileprefix, 1, 1);
 
-        timeline[1].play();
+        mediaPlayer[1].setOnReady(new Runnable() {
+            @Override
+            public void run() {
+                mediaPlayer[1].play();
+                timeline[1].play();
+            }
+        });
     }
 
     @FXML
     public void startLinkProcess() {
         startFrame.setText(String.valueOf(currentFrame[0]));
         timeline[0].play();
+        mediaPlayer[0].play();
     }
 
     @FXML
     public void endLinkProcess() {
         timeline[0].pause();
+        mediaPlayer[0].pause();
         endFrame.setText(String.valueOf(currentFrame[0]));
     }
 
@@ -268,9 +314,9 @@ public class Controller implements Initializable {
         /*
         format: linkName : startFrame : endFrame : linkStartFrame : boxX : boxY : boxW : boxH : videoTwo
          */
-
+        String filePrefix = videoTwo.substring(0, videoTwo.length() - 8);
         String boxOffsets = String.valueOf(widthOffset) + ":" + String.valueOf(heightOffset);
-        String linkEntry = linkName.getText() + ":" + startFrame.getText() + ":" + endFrame.getText() + ":" + linkStartFrame.getText() + ":" + boxCoordinates + boxOffsets + videoTwo;
+        String linkEntry = linkName.getText() + ":" + startFrame.getText() + ":" + endFrame.getText() + ":" + linkStartFrame.getText() + ":" + boxCoordinates + ":" + boxOffsets + ":" + filePrefix;
         items.add(linkEntry);
     }
 
@@ -285,6 +331,17 @@ public class Controller implements Initializable {
 
     @FXML
     public void submitHyperVideo() throws IOException {
-        main.sceneStart("display.fxml");
+        timeline[0].stop();
+        mediaPlayer[0].stop();
+        timeline[1].stop();
+        mediaPlayer[1].stop();
+
+        String listData = String.join("\n", linkList.getItems());
+        BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\metadata.txt"));
+        String filePrefix = videoOne.substring(0, videoOne.length() - 8);
+        writer.write(filePrefix + "\n");
+        writer.write(listData);
+        writer.close();
+        Main.sceneStart("display.fxml");
     }
 }
