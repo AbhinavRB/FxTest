@@ -85,6 +85,33 @@ public class DisplayController implements Initializable {
             System.out.println(boxes[i-1].target);
         }
 
+        displaySeek1.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            double position = Math.floor((double) newValue) * 33.33;
+            timeline[0].pause();
+            currentFrame[0] = (int) Math.floor((Double) newValue);
+            if (currentFrame[0] > 8999) {
+                currentFrame[0] = 8999;
+                mediaPlayer[0].pause();
+            }
+//            System.out.println(currentFrame);
+            timeline[0].play();
+            mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
+            mediaPlayer[0].play();
+        });
+
+        displaySeek2.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            double position = Math.floor((double) newValue) * 33.33;
+            timeline[1].pause();
+            currentFrame[1] = (int) Math.floor((Double) newValue);
+            if (currentFrame[1] > 8999) {
+                currentFrame[1] = 8999;
+                mediaPlayer[1].pause();
+            }
+            timeline[1].play();
+            mediaPlayer[1].seek(Duration.millis(currentFrame[1]*33.33));
+            mediaPlayer[1].play();
+        });
+
         displayCanvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 new EventHandler<MouseEvent>() {
                     @Override
@@ -181,6 +208,9 @@ public class DisplayController implements Initializable {
         if (timeline != null && timeline[1] != null)
             timeline[1].stop();
 
+        timeline[0].pause();
+        mediaPlayer[0].pause();
+
         videoLoop(source, 1, startFrame);
 
         mediaPlayer[1].setOnReady(new Runnable() {
@@ -190,5 +220,39 @@ public class DisplayController implements Initializable {
                 timeline[1].play();
             }
         });
+    }
+
+    @FXML
+    public void disPlayToggle1() {
+        if (isPlaying[0]) {
+            timeline[0].pause();
+            isPlaying[0] = false;
+            mediaPlayer[0].pause();
+            disPlayButton.setText("\u25b6");
+        }
+        else {
+            timeline[0].play();
+            isPlaying[0] = true;
+            mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
+            mediaPlayer[0].play();
+            disPlayButton.setText("\u23f8");
+        }
+    }
+
+    @FXML
+    public void disPlayToggle2() {
+        if (isPlaying[1]) {
+            timeline[1].pause();
+            mediaPlayer[1].pause();
+            isPlaying[1] = false;
+            disPauseButton.setText("\u25b6");
+        }
+        else {
+            timeline[1].play();
+            mediaPlayer[1].seek(Duration.millis(currentFrame[1]*33.33));
+            mediaPlayer[1].play();
+            isPlaying[1] = true;
+            disPauseButton.setText("\u23f8");
+        }
     }
 }
