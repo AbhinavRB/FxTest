@@ -91,8 +91,10 @@ public class Controller implements Initializable {
         mediaPlayer = new MediaPlayer[2];
         isPlaying[0] = false;
         isPlaying[1] = false;
-        //videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
-        //videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo";
+        // defaults
+        boxCoordinates = "176:144";
+        videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
+        videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo";
 
         items = FXCollections.observableArrayList();
         linkList.setItems(items);
@@ -325,12 +327,37 @@ public class Controller implements Initializable {
     @FXML
     public void makeLink() {
 
+        // defaults
+        String dataLinkName = "Link";
+        String dataStartFrame = "0";
+        String dataEndFrame = "100";
+        String dataLinkStartFrame = "0";
+
         /*
         format: linkName : startFrame : endFrame : linkStartFrame : boxX : boxY : boxW : boxH : videoTwo
          */
         String filePrefix = videoTwo.substring(0, videoTwo.length() - 8);
         String boxOffsets = String.valueOf(widthOffset) + ":" + String.valueOf(heightOffset);
-        String linkEntry = linkName.getText() + ":" + startFrame.getText() + ":" + endFrame.getText() + ":" + linkStartFrame.getText() + ":" + boxCoordinates + ":" + boxOffsets + ":" + filePrefix;
+        dataLinkName = linkName.getText();
+        if (dataLinkName.length() < 1 || dataLinkName == "") {
+            dataLinkName = "Link";
+        }
+        dataStartFrame = startFrame.getText();
+        if (dataStartFrame.length() < 1 || dataStartFrame == "") {
+            dataStartFrame = "0";
+        }
+        dataEndFrame = endFrame.getText();
+        if (dataEndFrame.length() < 1 || dataEndFrame == "") {
+
+        }
+        if (Integer.parseInt(dataEndFrame) < Integer.parseInt(dataStartFrame))
+            dataEndFrame = dataStartFrame;
+
+        dataLinkStartFrame = linkStartFrame.getText();
+        if (dataLinkStartFrame.length() < 1 || dataLinkStartFrame == "") {
+            dataLinkStartFrame = "0";
+        }
+        String linkEntry = dataLinkName + ":" + dataStartFrame + ":" + dataEndFrame + ":" + dataLinkStartFrame + ":" + boxCoordinates + ":" + boxOffsets + ":" + filePrefix;
         items.add(linkEntry);
     }
 
@@ -350,7 +377,11 @@ public class Controller implements Initializable {
         timeline[1].stop();
         mediaPlayer[1].stop();
 
-        String listData = String.join("\n", linkList.getItems());
+        // default
+        String listData = "Link:0:100:0:176:144:40:40:" + videoTwo.substring(0, videoTwo.length() - 8);
+
+        listData = String.join("\n", linkList.getItems());
+        System.out.println("listData: "+listData);
         BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\metadata.txt"));
         String filePrefix = videoOne.substring(0, videoOne.length() - 8);
         writer.write(filePrefix + "\n");

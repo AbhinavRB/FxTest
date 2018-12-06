@@ -77,6 +77,7 @@ public class Main extends Application {
     public static void sceneStart(String sceneName) throws IOException {
         root = FXMLLoader.load(Main.class.getResource(sceneName));
         scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource(sceneName.substring(0, sceneName.length() - 5) + "CSS.css").toExternalForm());
         myStage.setScene(scene);
         myStage.show();
     }
