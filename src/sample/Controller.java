@@ -93,8 +93,8 @@ public class Controller implements Initializable {
         isPlaying[1] = false;
         // defaults
         boxCoordinates = "176:144";
-        videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne";
-        videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo";
+        videoOne = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCOne\\USCOne0001.rgb";
+        videoTwo = "C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\USC\\USC\\USCTwo\\USCTwo0001.rgb";
 
         items = FXCollections.observableArrayList();
         linkList.setItems(items);
@@ -345,7 +345,7 @@ public class Controller implements Initializable {
         }
         dataEndFrame = endFrame.getText();
         if (dataEndFrame.length() < 1 || dataEndFrame == "") {
-
+            dataEndFrame = "100";
         }
         if (Integer.parseInt(dataEndFrame) < Integer.parseInt(dataStartFrame))
             dataEndFrame = dataStartFrame;
@@ -368,13 +368,21 @@ public class Controller implements Initializable {
 
     @FXML
     public void submitHyperVideo() throws IOException {
-        timeline[0].stop();
-        mediaPlayer[0].stop();
-        timeline[1].stop();
-        mediaPlayer[1].stop();
+        if (timeline != null) {
+            if (timeline[0] != null) {
+                timeline[0].stop();
+                mediaPlayer[0].stop();
+            }
+            if (timeline[1] != null) {
+                timeline[1].stop();
+                mediaPlayer[1].stop();
+            }
+        }
+
 
         // default
         String listData = "Link:0:100:0:176:144:40:40:" + videoTwo.substring(0, videoTwo.length() - 8);
+        System.out.println(listData);
 
         listData = String.join("\n", linkList.getItems());
         BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\metadata.txt"));
