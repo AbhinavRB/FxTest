@@ -76,13 +76,11 @@ public class DisplayController implements Initializable {
 
         boxes = new Box[videoData.size() - 1];
 
-        System.out.println(videoData.size());
         String sourcePrefix = videoData.get(0);
 
         for (int i = 1; i < videoData.size(); i++) {
             String[] data = videoData.get(i).split(":");
             boxes[i-1] = new Box(Integer.parseInt(data[1]), Integer.parseInt(data[2]), Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5]), Integer.parseInt(data[6]), Integer.parseInt(data[7]), data[8] + ":" +data[9]);
-            System.out.println(boxes[i-1].target);
         }
 
         displaySeek1.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -94,7 +92,6 @@ public class DisplayController implements Initializable {
                 mediaPlayer[0].pause();
                 isPlaying[0] = false;
             }
-//            System.out.println(currentFrame);
             timeline[0].play();
             mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
             mediaPlayer[0].play();
@@ -102,7 +99,7 @@ public class DisplayController implements Initializable {
         });
 
         displaySeek2.valueProperty().addListener((observable, oldValue, newValue) -> {
-//            double position = Math.floor((double) newValue) * 33.33;
+
             timeline[1].pause();
             currentFrame[1] = (int) Math.floor((Double) newValue);
             if (currentFrame[1] > 8999) {

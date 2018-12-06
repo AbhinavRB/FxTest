@@ -60,15 +60,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         myStage = primaryStage;
-//        primaryStage.setTitle("ImageView Experiment 1");
         myStage.setTitle("Author HyperVideo");
 
         sceneStart("sample.fxml");
 
 //        sceneStart("display.fxml");
 
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
 
 
 
@@ -79,6 +76,7 @@ public class Main extends Application {
         scene = new Scene(root);
         scene.getStylesheets().add(Main.class.getResource(sceneName.substring(0, sceneName.length() - 5) + "CSS.css").toExternalForm());
         myStage.setScene(scene);
+        myStage.setTitle("HyperVideo Player");
         myStage.show();
     }
 

@@ -110,7 +110,6 @@ public class Controller implements Initializable {
                 mediaPlayer[0].pause();
                 isPlaying[0] = false;
             }
-//            System.out.println(currentFrame);
             timeline[0].play();
             mediaPlayer[0].seek(Duration.millis(currentFrame[0]*33.33));
             mediaPlayer[0].play();
@@ -140,7 +139,6 @@ public class Controller implements Initializable {
                     timeline[0].pause();
                     mediaPlayer[0].pause();
                     isPlaying[0] = false;
-                    System.out.println(t.getX() + ", " + t.getY() + ", " + currentFrame[0]);
                     boxCoordinates = (int) Math.floor(t.getX()) + ":" + (int) Math.floor(t.getY());
 
                     GraphicsContext gc = canvas1.getGraphicsContext2D();
@@ -198,7 +196,6 @@ public class Controller implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 imageName = videoPrefix + String.format("%04d", currentFrame[videoNumber]) + ".rgb";
-//                System.out.println(imageName);
                 image[videoNumber] = Main.getImage(imageName);
                 if (videoNumber == 0)
                     view1.setImage(image[videoNumber]);
@@ -364,7 +361,6 @@ public class Controller implements Initializable {
     @FXML
     public void deleteLink() {
         int selectedIdx = linkList.getSelectionModel().getSelectedIndex();
-        System.out.println(selectedIdx);
         if (selectedIdx >= 0) {
             linkList.getItems().remove(selectedIdx);
         }
@@ -381,7 +377,6 @@ public class Controller implements Initializable {
         String listData = "Link:0:100:0:176:144:40:40:" + videoTwo.substring(0, videoTwo.length() - 8);
 
         listData = String.join("\n", linkList.getItems());
-        System.out.println("listData: "+listData);
         BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\abhin\\Desktop\\USC Stuff\\CSCI 576 Multimedia Systems\\Final Project\\Data\\metadata.txt"));
         String filePrefix = videoOne.substring(0, videoOne.length() - 8);
         writer.write(filePrefix + "\n");
